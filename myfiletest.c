@@ -1,21 +1,40 @@
 #include "types.h"
-//#include "defs.h"
-#include "param.h"
-#include "fs.h"
-#include "file.h"
-#include "spinlock.h"
-#include "user.h"
 #include "stat.h"
+#include "user.h"
+#include "fs.h"
+#include "fcntl.h"
 
 int
-main(){
-	//fd = open("/hxo", O_CREATE);
-	int fd;
-	fd = open("xy", 1);
-	write(fd, "abc", 3);
-	//link("x/y", "x/z");
-	//unlink("x/y");
-	//write(fd, "abc", 3);
-	//fd.close();
-	return(0);
+main(int argc, char *argv[])
+{
+  int fd, i;
+  char path[] = "myfile";
+  char data[512];
+
+  //printf(1, "writing starting\n");
+  memset(data, 'A', sizeof(data));
+
+  /**for(i = 0; i < 4; i++)
+    if(fork() > 0)
+      break;
+
+  printf(1, "write %d\n", i);*/
+
+  //path[8] += i;
+  fd = open(path, O_CREATE | O_RDWR);
+  for(i = 0; i < 20; i++)
+//    printf(fd, "%d\n", i);
+    write(fd, data, sizeof(data));
+  close(fd);
+
+/*  printf(1, "read\n");
+
+  fd = open(path, O_RDONLY);
+  for (i = 0; i < 20; i++)
+    read(fd, data, sizeof(data));
+  close(fd);
+*/
+  //wait();
+
+  exit();
 }
