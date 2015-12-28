@@ -5,7 +5,7 @@
 #include "stat.h"
 #include "user.h"
 
-#define N  1000
+#define N  10000000000
 
 void
 printf(int fd, char *s, ...)
