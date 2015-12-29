@@ -91,10 +91,16 @@ sys_uptime(void)
 }
 
 int
-sys_halt(){
+sys_halt(void)
+{
   char *p = "Shutdown";
   for( ; *p; p++)
     outb(0x8900, *p);
   return 0;
 }
 
+struct proc *
+sys_getproc(void)
+{
+  return proc;
+}
