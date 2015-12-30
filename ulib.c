@@ -2,7 +2,11 @@
 #include "stat.h"
 #include "fcntl.h"
 #include "user.h"
+#include "param.h"
+#include "memlayout.h"
+#include "mmu.h"
 #include "x86.h"
+#include "proc.h"
 
 char*
 strcpy(char *s, char *t)
@@ -102,4 +106,9 @@ memmove(void *vdst, void *vsrc, int n)
   while(n-- > 0)
     *dst++ = *src++;
   return vdst;
+}
+
+struct proc*
+gp(void){
+  return proc;
 }

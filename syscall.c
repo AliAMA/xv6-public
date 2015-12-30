@@ -101,6 +101,10 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_halt(void);
 extern int sys_getproc(void);
+struct proc* sys_ao(void)
+{
+  return proc;
+}
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -128,13 +132,14 @@ static int (*syscalls[])(void) = {
 [SYS_getproc] sys_getproc,
 };
 
+
 void
 syscall(void)
 {
   int num;
 
   num = proc->tf->eax;
-  if(num > 0 && num < NELEM(syscalls) +1  && syscalls[num]) {
+  if(num > 0 && num < NELEM(syscalls) +1 && syscalls[num]) {
     proc->tf->eax = syscalls[num]();
   } else {
     cprintf("%d %s: unknown sys call %d\n",

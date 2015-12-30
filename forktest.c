@@ -56,9 +56,11 @@ printint(int fd, int xx, int base, int sgn)
 void
 forktest(void)
 {
-  int n, pid, rpid=0;
+  int /*n, pid,*/ rpid=0;
   rpid = getpid();
-  int x = getproc();
+  struct proc* x ;
+  memset(&x, 0, sizeof (x));
+  int qo = getproc(&x);
 
   //int z = x->pid;
   //char* y = x.kstack;
@@ -69,10 +71,15 @@ forktest(void)
   printf(1,"fork test, pid: ");
   printint(1,rpid,10,0);
   printf(1,"-----\n");
-  printint(1,x,10,0);
-  //printf(1,"%s",y);
+  //printint(1,x->context->edi,10,0);
+  printf(1," - - -");
+  //printint(1,x->pid,10,0);
+  //printf(1,"%s\n",x->name);
+  printf(1,"\nqo:");
+  //printint(1,halt(),10,0);
+  printint(1,qo,10,0);
 
-  for(n=0; n<N; n++){
+  /*for(n=0; n<N; n++){
     pid = fork();
     if(pid < 0)
       break;
@@ -96,7 +103,7 @@ forktest(void)
     printf(1,"wait got too many\n");
     exit();
   }
-  
+  */
   printf(1,"fork test OK\n");
 }
 

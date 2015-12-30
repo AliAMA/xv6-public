@@ -8,7 +8,6 @@
 #include "proc.h"
 #include "stat.h"
 
-
 //extern int write(int, void*, int);
 
 
@@ -98,17 +97,28 @@ sys_uptime(void)
 int
 sys_halt(void)
 {
-  char *p = "Shutdown";
+  /*char *p = "Shutdown";
   for( ; *p; p++)
-    outb(0x8900, *p);
+    outb(0x8900, *p);*/
+  //char* t = "atohe";
+  //exec("/echo", &t);
+  //unsigned int adr = 0;
+  //adr = (unsigned int)proc;
+ 
   return 0;
 }
 
 int
 sys_getproc(void)
 {
-  struct proc* this_proc = proc;
+  //struct proc* this_proc = proc;
+  struct proc** out_proc = 0;
+  if (argptr(0, (void*)&out_proc,sizeof(out_proc)) < 0)
+    return -1;
+  *out_proc = proc;
 
   //sys_write(1,this_proc->kstack, sizeof(this_proc->kstack));
-  return this_proc->parent->pid;
+  return (*out_proc)->pid;
+  //return this_proc;
 }
+

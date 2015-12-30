@@ -1,3 +1,4 @@
+struct proc;
 struct stat;
 struct rtcdate;
 
@@ -24,8 +25,8 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int halt(void);
-int getproc(void);
-
+int getproc(struct proc**);
+struct proc* ao(void);
 
 // ulib.c
 int stat(char*, struct stat*);
@@ -40,3 +41,4 @@ void* memset(void*, int, uint);
 void* malloc(uint);
 void free(void*);
 int atoi(const char*);
+struct proc* gp(void);
