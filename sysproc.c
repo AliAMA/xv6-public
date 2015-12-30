@@ -6,6 +6,11 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "stat.h"
+
+
+//extern int write(int, void*, int);
+
 
 int
 sys_fork(void)
@@ -99,8 +104,11 @@ sys_halt(void)
   return 0;
 }
 
-struct proc *
+int
 sys_getproc(void)
 {
-  return proc;
+  struct proc* this_proc = proc;
+
+  //sys_write(1,this_proc->kstack, sizeof(this_proc->kstack));
+  return this_proc->parent->pid;
 }

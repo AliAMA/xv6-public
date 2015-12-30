@@ -58,9 +58,9 @@ forktest(void)
 {
   int n, pid, rpid=0;
   rpid = getpid();
-  struct proc* x = getproc();
+  int x = getproc();
 
-  int z = x->pid;
+  //int z = x->pid;
   //char* y = x.kstack;
   //char* x;
 
@@ -69,7 +69,7 @@ forktest(void)
   printf(1,"fork test, pid: ");
   printint(1,rpid,10,0);
   printf(1,"-----\n");
-  printint(1,z,10,0);
+  printint(1,x,10,0);
   //printf(1,"%s",y);
 
   for(n=0; n<N; n++){
