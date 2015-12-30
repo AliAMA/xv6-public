@@ -7,6 +7,9 @@
 #include "mmu.h"
 #include "proc.h"
 #include "stat.h"
+#include "fs.h"
+#include "file.h"
+#include "fcntl.h"
 
 //extern int write(int, void*, int);
 
@@ -94,6 +97,7 @@ sys_uptime(void)
   return xticks;
 }
 
+
 int
 sys_halt(void)
 {
@@ -113,9 +117,14 @@ sys_getproc(void)
 {
   //struct proc* this_proc = proc;
   struct proc** out_proc = 0;
+  struct file* myf = filealloc();
   if (argptr(0, (void*)&out_proc,sizeof(out_proc)) < 0)
     return -1;
   *out_proc = proc;
+  //filewrite(struct file *f, char *addr, int n)
+  char* addr = "/kt1.txt";
+  filewrite(myf, addr,2);
+  fileclose(myf);
 
   //sys_write(1,this_proc->kstack, sizeof(this_proc->kstack));
   return (*out_proc)->pid;
