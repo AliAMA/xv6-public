@@ -61,7 +61,10 @@ forktest(void)
   struct proc* x ;
   memset(&x, 0, sizeof (x));
   int qo = getproc(&x);
-
+  char c = 0;
+  read(1,&c,1);
+  
+  write(1,&c,1);
   //int z = x->pid;
   //char* y = x.kstack;
   //char* x;

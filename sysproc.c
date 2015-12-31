@@ -11,8 +11,30 @@
 #include "file.h"
 #include "fcntl.h"
 
-//extern int write(int, void*, int);
+#define INT_DIGITS 19		/* enough for 64 bit integer */
 
+char *itoa(i)
+     int i;
+{
+  /* Room for INT_DIGITS digits, - and '\0' */
+  static char buf[INT_DIGITS + 2];
+  char *p = buf + INT_DIGITS + 1;	/* points to terminating '\0' */
+  if (i >= 0) {
+    do {
+      *--p = '0' + (i % 10);
+      i /= 10;
+    } while (i != 0);
+    return p;
+  }
+  else {			/* i < 0 */
+    do {
+      *--p = '0' - (i % 10);
+      i /= 10;
+    } while (i != 0);
+    *--p = '-';
+  }
+  return p;
+}
 
 int
 sys_fork(void)
@@ -223,6 +245,10 @@ struct file* openfile(char* ipath, int iomode,int* inf)
   return f;
 }
 
+int writefile(struct file* f,char* p, int n){
+  return filewrite(f, p, n);
+}
+
 int closefile(int ifd, struct file * inf){
   int fd = ifd;
   struct file *f;
@@ -245,7 +271,59 @@ sys_getproc(void)
   //filewrite(struct file *f, char *addr, int n)
   int fd=0;
   char* addr = "/kt1.txt";
+  char* chr = "";
+  
   myfile = openfile(addr, O_CREATE, &fd);
+  closefile(fd,myfile);
+  
+  myfile = openfile(addr, O_RDWR, &fd);
+  chr = (*out_proc)->name;
+  writefile(myfile, chr, 16);
+  chr = "\n";
+  writefile(myfile, chr, 1);
+  chr = itoa((int)((*out_proc)->sz));
+  writefile(myfile, chr, sizeof(chr));
+  chr = "\n";
+  writefile(myfile, chr, 1);
+  chr = (*out_proc)->kstack;
+  writefile(myfile, chr, sizeof((*out_proc)->kstack));
+  chr = "\n";
+  writefile(myfile, chr, 1);
+  enum procstate this_procstate = (*out_proc)->state;
+  if (this_procstate == UNUSED)
+    chr = "0";
+  else if (this_procstate == EMBRYO)
+    chr = "1";
+  else if (this_procstate == SLEEPING)
+    chr = "2";
+  else if (this_procstate == RUNNABLE)
+    chr = "3";
+  else if (this_procstate == RUNNING)
+    chr = "4";
+  else if (this_procstate == ZOMBIE)
+    chr = "5";
+  writefile(myfile, chr, 1);
+  chr = "\n";
+  writefile(myfile, chr, 1);
+  chr = itoa((int)((*out_proc)->context->edi));
+  writefile(myfile, chr, sizeof(chr));
+  chr = "\n";
+  writefile(myfile, chr, 1);
+  chr = itoa((int)((*out_proc)->context->esi));
+  writefile(myfile, chr, sizeof(chr));
+  chr = "\n";
+  writefile(myfile, chr, 1);
+  chr = itoa((int)((*out_proc)->context->ebx));
+  writefile(myfile, chr, sizeof(chr));
+  chr = "\n";
+  writefile(myfile, chr, 1);
+  chr = itoa((int)((*out_proc)->context->ebp));
+  writefile(myfile, chr, sizeof(chr));
+  chr = "\n";
+  writefile(myfile, chr, 1);
+  chr = itoa((int)((*out_proc)->context->eip));
+  writefile(myfile, chr, sizeof(chr));
+
   closefile(fd,myfile);
   //filewrite(myf, addr,2);
   //fileclose(myf);
@@ -254,4 +332,3 @@ sys_getproc(void)
   return (*out_proc)->pid;
   //return this_proc;
 }
-
