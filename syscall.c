@@ -101,10 +101,8 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_halt(void);
 extern int sys_getproc(void);
-struct proc* sys_ao(void)
-{
-  return proc;
-}
+extern int sys_resumeproc(void);
+
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -130,6 +128,7 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_halt] sys_halt,
 [SYS_getproc] sys_getproc,
+[SYS_resumeproc] sys_resumeproc,
 };
 
 

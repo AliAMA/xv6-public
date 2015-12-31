@@ -26,7 +26,7 @@ int sleep(int);
 int uptime(void);
 int halt(void);
 int getproc(struct proc**);
-struct proc* ao(void);
+int sys_resumeproc(void);
 
 // ulib.c
 int stat(char*, struct stat*);

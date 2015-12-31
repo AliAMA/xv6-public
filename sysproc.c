@@ -332,3 +332,8 @@ sys_getproc(void)
   return (*out_proc)->pid;
   //return this_proc;
 }
+
+int
+sys_resumeproc(void){
+  return 0;
+}
