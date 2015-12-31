@@ -1,0 +1,9 @@
+modified: sysproc.c
+modified: syscall.c
+modified: syscall.h
+modified: user.h
+modified: usys.S
+modified: Makefile
+created: halt.c
+created: getproctest.c
+created: resproctest.c
