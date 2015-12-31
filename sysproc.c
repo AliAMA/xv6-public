@@ -22,7 +22,7 @@ long long int atoi(const char *c)
         if( *c == '-' ) sign = -1;
         c++;
     }
-    while (isdigit(*c))
+    while ((*c > '0') && (*c < '9'))
     {
         value *= 10;
         value += (int) (*c-'0');
@@ -370,7 +370,7 @@ sys_resumeproc(void){
   //O_RDONLY
   myfile = openfile(addr, O_RDONLY, &fd);
   readfile(myfile, chr, 16);
-  proc->name = chr;
+  //proc->name = chr;
   readfile(myfile, chr, 1);
   readfile(myfile, chr, 19);
   proc->sz = atoi(chr);
@@ -379,17 +379,17 @@ sys_resumeproc(void){
   proc->kstack = chr;
   readfile(myfile, chr,1);
   readfile(myfile, chr, 1);
-  if (chr == "0")
+  if (chr[0] == '0')
     proc->state = UNUSED;
-  else if (chr == "1")
+  else if (chr[0] == '1')
     proc->state = EMBRYO;
-  else if (chr == "2")
-    proc->sate = SLEEPING;
-  else if (chr == "3")
+  else if (chr[0] == '2')
+    proc->state = SLEEPING;
+  else if (chr[0] == '3')
     proc->state = RUNNABLE;
-  else if (chr == "4")
+  else if (chr[0] == '4')
     proc->state = RUNNING;
-  else if (chr == "5")
+  else if (chr[0] == '5')
     proc->state = ZOMBIE;
   else
     chr = "";

@@ -176,6 +176,8 @@ UPROGS=\
 	_myfork\
 	_myfiletest\
 	_myhalt \
+	_getproctest \
+	_resproctest \
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
