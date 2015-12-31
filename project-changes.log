@@ -7,3 +7,5 @@ modified: Makefile
 created: halt.c
 created: getproctest.c
 created: resproctest.c
+.git directory removed due to moodle attachment size limit
+you can find the project repository at https://github.com/AliAMA/xv6-public the repo is public and salehkhazaei added to the project
