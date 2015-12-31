@@ -13,6 +13,25 @@
 
 #define INT_DIGITS 19		/* enough for 64 bit integer */
 
+long long int atoi(const char *c)
+{
+    long long int value = 0;
+    int sign = 1;
+    if( *c == '+' || *c == '-' )
+    {
+        if( *c == '-' ) sign = -1;
+        c++;
+    }
+    while (isdigit(*c))
+    {
+        value *= 10;
+        value += (int) (*c-'0');
+        c++;
+    }
+    return (value * sign);
+}
+
+
 char *itoa(i)
      int i;
 {
@@ -249,6 +268,10 @@ int writefile(struct file* f,char* p, int n){
   return filewrite(f, p, n);
 }
 
+int readfile(struct file* f,char* p, int n){
+  return fileread(f, p, n);
+}
+
 int closefile(int ifd, struct file * inf){
   int fd = ifd;
   struct file *f;
@@ -282,11 +305,11 @@ sys_getproc(void)
   chr = "\n";
   writefile(myfile, chr, 1);
   chr = itoa((int)((*out_proc)->sz));
-  writefile(myfile, chr, sizeof(chr));
+  writefile(myfile, chr, 19);
   chr = "\n";
   writefile(myfile, chr, 1);
   chr = (*out_proc)->kstack;
-  writefile(myfile, chr, sizeof((*out_proc)->kstack));
+  writefile(myfile, chr, 40);
   chr = "\n";
   writefile(myfile, chr, 1);
   enum procstate this_procstate = (*out_proc)->state;
@@ -306,23 +329,23 @@ sys_getproc(void)
   chr = "\n";
   writefile(myfile, chr, 1);
   chr = itoa((int)((*out_proc)->context->edi));
-  writefile(myfile, chr, sizeof(chr));
+  writefile(myfile, chr, 19);
   chr = "\n";
   writefile(myfile, chr, 1);
   chr = itoa((int)((*out_proc)->context->esi));
-  writefile(myfile, chr, sizeof(chr));
+  writefile(myfile, chr, 19);
   chr = "\n";
   writefile(myfile, chr, 1);
   chr = itoa((int)((*out_proc)->context->ebx));
-  writefile(myfile, chr, sizeof(chr));
+  writefile(myfile, chr, 19);
   chr = "\n";
   writefile(myfile, chr, 1);
   chr = itoa((int)((*out_proc)->context->ebp));
-  writefile(myfile, chr, sizeof(chr));
+  writefile(myfile, chr, 19);
   chr = "\n";
   writefile(myfile, chr, 1);
   chr = itoa((int)((*out_proc)->context->eip));
-  writefile(myfile, chr, sizeof(chr));
+  writefile(myfile, chr, 19);
 
   closefile(fd,myfile);
   //filewrite(myf, addr,2);
@@ -335,5 +358,57 @@ sys_getproc(void)
 
 int
 sys_resumeproc(void){
+  struct proc** out_proc = 0;
+  struct file* myfile = 0 ;
+  if (argptr(0, (void*)&out_proc,sizeof(out_proc)) < 0)
+    return -1;
+  *out_proc = proc;
+  //filewrite(struct file *f, char *addr, int n)
+  int fd=0;
+  char* addr = "/kt1.txt";
+  char* chr = "";
+  //O_RDONLY
+  myfile = openfile(addr, O_RDONLY, &fd);
+  readfile(myfile, chr, 16);
+  proc->name = chr;
+  readfile(myfile, chr, 1);
+  readfile(myfile, chr, 19);
+  proc->sz = atoi(chr);
+  readfile(myfile, chr, 1);
+  readfile(myfile, chr, 40);
+  proc->kstack = chr;
+  readfile(myfile, chr,1);
+  readfile(myfile, chr, 1);
+  if (chr == "0")
+    proc->state = UNUSED;
+  else if (chr == "1")
+    proc->state = EMBRYO;
+  else if (chr == "2")
+    proc->sate = SLEEPING;
+  else if (chr == "3")
+    proc->state = RUNNABLE;
+  else if (chr == "4")
+    proc->state = RUNNING;
+  else if (chr == "5")
+    proc->state = ZOMBIE;
+  else
+    chr = "";
+  readfile(myfile, chr, 1);
+  readfile(myfile, chr, 19);
+  proc->context->edi = atoi(chr);
+  readfile(myfile, chr, 1);
+  readfile(myfile, chr, 19);
+  proc->context->esi = atoi(chr);
+  readfile(myfile, chr, 1);
+  readfile(myfile, chr, 19);
+  proc->context->ebx = atoi(chr);
+  readfile(myfile, chr, 1);
+  readfile(myfile, chr, 19);
+  proc->context->ebp = atoi(chr);
+  readfile(myfile, chr, 1);
+  readfile(myfile, chr, 19);
+  proc->context->eip = atoi(chr);
+
+  closefile(fd, myfile); 
   return 0;
 }
